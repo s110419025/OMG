@@ -188,6 +188,9 @@ static const unsigned char PROGMEM stand[]={
   0x00,0x00,
 };
 
+
+
+
 int box_x=0,box_y[]={8,24,20,18,25,20,7,10,5,0},space=8;//0<=y<=(32-space)
 int man_y,manstate=0;
 int count=0,i=0;
@@ -196,6 +199,11 @@ int buttonright = 6;
 int buttonleft = 7; 
 int buttonrightstate = 0;
 int buttonleftstate = 0;
+
+
+
+
+
 
 void draw(){
   display.clearDisplay();
@@ -223,6 +231,11 @@ void draw(){
   display.display();
 }
 
+
+
+
+
+
 void movement(){
   //讀按鈕
   buttonrightstate= digitalRead(buttonright);
@@ -236,8 +249,25 @@ void movement(){
   if(box_x<128)box_x++; //天空墜落
   if(box_x==128 && box_y[i]!=0)i++; //下一塊天空的編號  
   if(box_x==128)box_x=0; //下一塊天空開始墜落
- 
+  
+  if( (box_x==111)&&(man_y<box_y[i])&&( (man_y+8)>(box_y[i]+space+1) )// (人的頭與天空的高度相同)&&(人站的地方在左雲的範圍內)&&(人站的地方在右雲的範圍內)
+     {
+       gameover();//遊戲失敗
+     }
+  
 }
+
+
+void gameover(){ //遊戲失敗
+  display.clearDisplay();
+  display.drawBitmap(0,0,be,128,32,WHITE);
+  display.display();
+}
+
+
+
+
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -257,8 +287,15 @@ void setup() {
   display.display();
 }
 
+
+
+
+
+
+
+
 void loop() {
   //if(box_y[i]!=0)drop();
-  //movement();
-  //draw();
+  movement();
+  draw();
 }
